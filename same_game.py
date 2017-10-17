@@ -17,6 +17,32 @@ def pos_close(pos1,pos2):
             return True
     return False
 
+def valid_move(t, source, mov):
+    lines=lines(t)
+    columns=columns(t)
+    if mov=='u':
+        return pos_l(source)>0
+    if mov=='d':
+        return pos_l(source)<lines-1
+    if mov=='l':
+        return pos_c(source)>0
+    if mov=='r':
+        return pos_c(source)<colums-1
+
+
+def getAdjacents(t,pos):
+    adjacents=[]
+    if valid_move(t,pos,'d'):
+        adjacents.push(make_pos(pos_l(pos)+1, pos_c(pos)))
+    if valid_move(t,pos,'l'):
+        adjacents.push(make_pos(pos_l(pos), pos_c(pos)-1))
+    if valid_move(t,pos,'u'):
+        adjacents.push(make_pos(pos_l(pos)-1, pos_c(pos)))
+    if valid_move(t,pos,'r'):
+        adjacents.push(make_pos(pos_l(pos), pos_c(pos)+1))
+    return adjacents
+
+
 
 """TAI color"""
 # sem cor = 0
@@ -34,16 +60,16 @@ def setPositionClor(t,pos,v):
 
 """TAD board"""
 
-def total_l(t):
+def lines(t):
     return len(t)
-def total_c(t):
+def columns(t):
     return len(t[0])
 def getLine(t,n):
     return t[n]
 def printBoard(t):
     i=0
     j=0
-    for i in range(total_l(t)):
+    for i in range(lines(t)):
         print( getLine(t,i))
 
 """TAD group"""
@@ -52,12 +78,44 @@ def addToGroup(g,pos):
     g.append(pos)
 def addAnotherGroup(groups,pos):
     groups.append([pos])
-
+def addAnotherGroup(groups, pos1,pos2):
+    groups.append([pos1,pos2])
 
 def  board_find_groups(board):
+    lines=lines(board)
+    columns=columns(board)
     board_groups=[]
-    for i in range(total_l(board)):
-        for j in range(total_c(board)):
+    visited_board= board
+    stack=[]
+    in_group_board=[]
+    for i in range(lines):
+        for j in range(columns):
+            visited_board[i][j]=0
+            in_group_board[i][j]=False
+    stack.append(make_pos(0,0))
+    while stack!=[]:
+        pos=stack.pop()
+        for new_pos in getAdjacents(pos):
+            if getColor(t,new_pos)==getColor(t,pos):
+                if in_group_board[pos_l(new_pos)][pos_c(new_pos)]:
+                    if in_group_board[pos_l(new_pos)][pos_c(new_pos)]
+                    #if pos nao esta no board group:
+                        addAnotherGroup(board_groups,pos,newpos)
+
+
+
+
+
+
+
+
+
+
+
+"""def  board_find_groups(board):
+    board_groups=[]
+    for i in range(lines(board)):
+        for j in range(columns(board)):
             iteratingPos= make_pos(i,j)
             iteratingPosAppended=False
             for sublist in board_groups:
@@ -70,7 +128,7 @@ def  board_find_groups(board):
                         addToGroup(sublist,iteratingPos)
                         iteratingPosAppended=True
             addAnotherGroup(board_groups, iteratingPos)
-    return board_groups
+    return board_groups"""
 
 
 
