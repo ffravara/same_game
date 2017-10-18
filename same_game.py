@@ -88,6 +88,15 @@ def getGroupOfPos(groups,pos):
 def inGroup(in_group_board, pos):
     return in_group_board[pos_l(pos)][(new_pos)]
 
+def appendGroups(groups,pos1,pos2):
+    i=getGroupOfPos(groups,pos2)
+    new_list=groups[i1
+    del groups[i]
+    j=getGroupOfPos(groups,pos2)
+    new_list=new_list+groups[j]
+    del groups[j]
+    groups.append(new_list)
+
 def visited(visited_board,pos):
     return visited_board[pos_l(pos)][pos_c(pos)]
 def setVisited(visited_board,pos):
@@ -111,16 +120,24 @@ def  board_find_groups(board):
     while stack!=[]:
         pos=stack.pop()
         in_group=False
+        if inGroup(in_group_board, pos):
+            in_group=True
         for new_pos in getAdjacents(board,pos):
             if visited(visited_board,new_pos):
-                if lor(t,new_pos)==getColor(t,pos):
-                    addToGroup(groups,getGroupOfPos(groups,new_pos),pos)
-                    in_group=True
+                if getColor(t,new_pos)==getColor(t,pos):
+                    if in_group:
+                        appendGroups(groups,pos,new_pos)
+                    else:
+                        addToGroup(groups,getGroupOfPos(groups,new_pos),pos)
+                        in_group=True
             else:
                 if getColor(t,new_pos)==getColor(t,pos):
-                    addAnotherGroup(groups, pos, new_pos)
-                    in_group=True
-                    stack.push(new_pos)
+                    if in_group:
+                        addToGroup(groups,getGroupOfPos(groups,pos),new_pos)
+                    else:
+                        addAnotherGroup(groups, pos, new_pos)
+                        in_group=True
+                stack.push(new_pos)
         if in_group==False:
             addAnotherGroup(groups,pos)
         setVisited(visited_board,pos)
@@ -133,14 +150,6 @@ print(board_find_groups(t))
 
 """GREEN TRASH (hopefully not needed recyclabe shit)"""
 
-"""def appendGroups(groups,pos1,pos2):
-    i=getGroupOfPos(groups,pos2)
-    new_list=groups[i1
-    del groups[i]
-    j=getGroupOfPos(groups,pos2)
-    new_list=new_list+groups[j]
-    del groups[j]
-    groups.append(new_list)"""
 
 
 
