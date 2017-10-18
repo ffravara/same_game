@@ -1,5 +1,5 @@
 
-t=[[1,2,2,3,3],[2,2,2,1,3],[1,2,2,2,2],[1,1,1,1,1]]
+
 
 """TAD board"""
 
@@ -7,13 +7,12 @@ def seeLines(t):
     return len(t)
 def seeColumns(t):
     return len(t[0])
-def seeLines(t,n):
-    return t[n]
 def printBoard(t):
     i=0
     j=0
     for i in range(seeLines(t)):
         print( t[i])
+
 
 
 """TAD posicao"""
@@ -34,19 +33,19 @@ def valid_move(t, source, mov):
     if mov=='l':
         return pos_c(source)>0
     if mov=='r':
-        return pos_c(source)<colums-1
+        return pos_c(source)<columns-1
 
 
 def getAdjacents(t,pos):
     adjacents=[]
     if valid_move(t,pos,'u'):
-        adjacents.push(make_pos(pos_l(pos)-1, pos_c(pos)))
+        adjacents.append(make_pos(pos_l(pos)-1, pos_c(pos)))
     if valid_move(t,pos,'l'):
-        adjacents.push(make_pos(pos_l(pos), pos_c(pos)-1))
+        adjacents.append(make_pos(pos_l(pos), pos_c(pos)-1))
     if valid_move(t,pos,'d'):
-        adjacents.push(make_pos(pos_l(pos)+1, pos_c(pos)))
+        adjacents.append(make_pos(pos_l(pos)+1, pos_c(pos)))
     if valid_move(t,pos,'r'):
-        adjacents.push(make_pos(pos_l(pos), pos_c(pos)+1))
+        adjacents.append(make_pos(pos_l(pos), pos_c(pos)+1))
 
 
     return adjacents
@@ -58,14 +57,17 @@ def getAdjacents(t,pos):
 # com cor > 0
 def get_no_color():
     return 0
+def set_no_color(t,pos):
+    t[pos_l(pos)][pos_c(pos)]=0
 def no_color (c):
     return c==0
 def color (c):
     return c > 0
 def getColor( t ,pos):
     return t[pos_l(pos)][pos_c(pos)]
-def setPositionClor(t,pos,v):
-    t[pos_l(pos)][pos_c(pos)]=v
+def has_no_color(t,pos):
+    t[pos_l(pos)][pos_c(pos)]=get_no_color()
+
 
 
 
@@ -75,24 +77,29 @@ def addToGroup(g,i,pos):
     g[i].append(pos)
 def addAnotherGroup(groups,pos):
     groups.append([pos])
-def addAnotherGroup(groups, pos1,pos2):
+def addTwoGroup(groups, pos1,pos2):
     groups.append([pos1,pos2])
 
 
 
-def getGroupOfPos(groups,pos):
-    for i in range(len(groups)):
-        if pos in groups[i]:
-            return i
+def GetGroupIndex(groups,pos):
+    index = -1
+    for sublist in groups:
+        index+=1
+        if pos in sublist:
+            return index
 
-def inGroup(in_group_board, pos):
-    return in_group_board[pos_l(pos)][(new_pos)]
+
+def inGroup(groupBoard, pos):
+    return groupBoard[pos_l(pos)][pos_c(pos)]
+def nowInGroup(groupBoard,pos):
+    groupBoard[pos_l(pos)][pos_c(pos)]=True
 
 def appendGroups(groups,pos1,pos2):
-    i=getGroupOfPos(groups,pos2)
-    new_list=groups[i1
+    i=GetGroupIndex(groups,pos1)
+    new_list=groups[i]
     del groups[i]
-    j=getGroupOfPos(groups,pos2)
+    j=GetGroupIndex(groups,pos2)
     new_list=new_list+groups[j]
     del groups[j]
     groups.append(new_list)
@@ -105,45 +112,95 @@ def setVisited(visited_board,pos):
 
 
 
-
+groups=[]
 
 def  board_find_groups(board):
 
     lines=seeLines(board)
     columns =seeColumns(board)
 
-    visited_board=[[False for i in range(lines)]for j in range(columns)]
-    in_group_board=[[False for i in range(lines)]for j in range(columns)]
+    visited_board=[[False for i in range(columns)]for j in range(lines)]
+    groupBoard=[[False for i in range(columns)]for j in range(lines)]
     stack=[]
 
     stack.append(make_pos(0,0))
+
+
     while stack!=[]:
-        pos=stack.pop()
-        in_group=False
-        if inGroup(in_group_board, pos):
-            in_group=True
-        for new_pos in getAdjacents(board,pos):
-            if visited(visited_board,new_pos):
-                if getColor(t,new_pos)==getColor(t,pos):
-                    if in_group:
-                        appendGroups(groups,pos,new_pos)
+        currentBall = stack.pop()
+        currentBall_in_group = False
+        if inGroup(groupBoard, currentBall):
+            currentBall_in_group=True
+
+        print ("This the current ball: {}".format(currentBall))
+        for adjacentBall in getAdjacents(board,currentBall):
+            print(adjacentBall)
+
+            #primeiro, vemos se adJacentBall já foi visitado
+            if visited(visited_board,adjacentBall):
+                if getColor(t,adjacentBall)==getColor(t,currentBall):
+                    #segundo, ver se currentBall tem grupo
+                    if currentBall_in_group:
+                        #juntar grupos da duas bolas
+                        appendGroups(groups,currentBall,adjacentBall)
                     else:
-                        addToGroup(groups,getGroupOfPos(groups,new_pos),pos)
-                        in_group=True
+                        #currentBall nao tem grupo, entao juntamo-la ao grupo da adjacente
+                        addToGroup(groups,GetGroupIndex(groups,adjacentBall),currentBall)
+                        nowInGroup(groupBoard,currentBall)
+                        currentBall_in_group=True
+
+            #Se a adjacentBall ainda nao foi visitada
             else:
-                if getColor(t,new_pos)==getColor(t,pos):
-                    if in_group:
-                        addToGroup(groups,getGroupOfPos(groups,pos),new_pos)
+                if getColor(t,adjacentBall)==getColor(t,currentBall):
+                    if currentBall_in_group:
+                        #se a currentBall ja tem grupo e a adjacentBall tambem, juntamo-los
+                        if inGroup(groupBoard, adjacentBall):
+                            #juntamos os grupos
+                            appendGroups(groups,currentBall,adjacentBall)
+                        else:
+                            #metemos a adjacente no grupo da currentBall
+                            addToGroup(groups,GetGroupIndex(groups,currentBall),adjacentBall)
+                            nowInGroup(groupBoard,adjacentBall)
+                    #se a currentBall ainda nao tem grupo...
                     else:
-                        addAnotherGroup(groups, pos, new_pos)
-                        in_group=True
-                stack.push(new_pos)
-        if in_group==False:
-            addAnotherGroup(groups,pos)
-        setVisited(visited_board,pos)
+                        #e a adjacentBall tiver grupo... juntamo-los
+                        if inGroup(groupBoard, adjacentBall):
+                            appendGroups(groups,currentBall,adjacentBall)
+                        #nenhuma tem grupo
+                        else:
+                            addTwoGroup(groups, currentBall, adjacentBall)
+                            currentBallin_group=True
+                            nowInGroup(groupBoard,adjacentBall)
+                            nowInGroup(groupBoard,currentBall)
+                stack.append(adjacentBall)
+            if currentBall_in_group==False:
+                addAnotherGroup(groups,currentBall)
+                currentBall_in_group=True
+        setVisited(visited_board,currentBall)
+        print(groups)
     return groups
 
+#print(board_find_groups(t))
+
+def board_remove_groups(t, group):
+    board=t
+    lines=seeLines(board)
+    columns=seeLines(board)
+    for sublist in groups:
+        if group==sublist:
+            for ball in sublist:
+                set_no_color(board, ball)
+
+    for i in range(lines, -1, -1):
+        if getPositionColo
+
+
+
+
+t=[[1,2,2,3,3],[2,2,2,1,3],[1,2,2,2,2],[1,1,1,1,1]]
+printBoard(t)
 print(board_find_groups(t))
+
 
 
 
