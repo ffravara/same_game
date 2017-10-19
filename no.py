@@ -44,7 +44,7 @@ class same_game(Problem):
 		newBoard = board_remove_group(state.board, action)
 		newState = sg_state(newBoard)
 
-		return newBoard
+		return newState
 
 	# def goal_test(self, state):      E preciso fazer override disto?????
 
