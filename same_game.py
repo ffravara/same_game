@@ -210,8 +210,7 @@ def  board_find_groups(board):
 
     return groups
 
-t=[[3,1,3,2],[1,1,1,3],[1,3,2,1],[1,1,3,3],[3,3,1,2],
- [2,2,2,2],[3,1,2,3],[2,3,2,3],[2,1,1,3],[2,3,1,2]]
+
 #print(board_find_groups(t))"""
 
 """def printwithgroups(l,c,groups,t):
@@ -225,15 +224,17 @@ printwithgroups(10,4,board_find_groups(t),t)"""
 
 
 
-def board_remove_groups(t, group):
+def board_remove_group(t, group):
     board = copy.deepcopy(t)
     lines=seeLines(board)
     columns=seeLines(board)
+    printBoard(t)
     #encontrar o grupo que e eliminado, e por as posicoes a zero(sem cor)
     for sublist in groups:
         if group==sublist:
             for ball in sublist:
                 set_no_color(board, ball)
+                printBoard(t)
     #COMPACTACAO VERTICAL
 
     #fazer a compactacao vertical a cada coluna....
@@ -243,9 +244,9 @@ def board_remove_groups(t, group):
             if has_no_color(board,make_pos(i,j)):
                 #empurra os de cima desse para baixo(copia o valor da pos de cima para a de baixo
                 for k in range(i,0,-1):
-                    color=getColor(board, make_pos(i+1,j))
+                    color = getColor(board, make_pos(i+1,j))
                     setColor(board, make_pos(i,j),color)
-                set_no_color(board, make_pos(0,j),)
+                set_no_color(board, make_pos(0,j))
 
     #COMPACTACAO HORIZONTAL
     #percorre as colunas da esquerda para a direita
@@ -262,13 +263,29 @@ def board_remove_groups(t, group):
                 #e para cada pos nas colunas posteriores, pos fica com a cor da pos da coluna a direita
                 for l in range(lines):
                     color=getColor(t,make_pos(l,column_index+1))
-                    setColor(t,make_pos(l,column_index))=color
-                for l in range(lines):
-                    set_no_color(board, make_pos(l,columns),color)
+                    setColor(t,make_pos(l,column_index), color)
+            for l in range(lines):
+                set_no_color(board, make_pos(l,columns))
+
+    return board
 
 
 
 
+
+t = [[1,2,2,3,3],[2,2,2,1,3],[1,2,2,2,2],[1,1,1,1,1]]
+
+groupOf2 = [(0, 1), (1, 1), (0, 2), (1, 2), (2, 4), (2, 3), (2, 2), (2, 1), (1, 0)]
+groupOf1 = [(2, 0), (3, 0), (3, 1), (3, 2), (3, 3), (3, 4)]
+
+newBoard = board_remove_group(t, groupOf1)
+
+printBoard(newBoard)
+
+
+
+
+# board_remove_group(t, ())
 
 
 
