@@ -142,6 +142,8 @@ def  board_find_groups(board):
 
     while stack!=[]:
         currentBall = stack.pop()
+        if currentBall==make_pos(4,0)#AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+            print(groupBoard[4][0])#AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
         currentBall_in_group = False
         if inGroup(groupBoard, currentBall):
             currentBall_in_group=True
@@ -149,8 +151,6 @@ def  board_find_groups(board):
         print ("This the current ball: {}!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!".format(currentBall))
         for adjacentBall in getAdjacents(board,currentBall):
             print(adjacentBall)
-            if currentBall==(1,2):
-                print(stack)
             #primeiro, vemos se adJacentBall já foi visitado
             if visited(visited_board,adjacentBall):
                 print("adjacente tem grupo")#AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
@@ -173,7 +173,7 @@ def  board_find_groups(board):
                 if getColor(t,adjacentBall)==getColor(t,currentBall):
                     if currentBall_in_group:
                         #se a currentBall ja tem grupo e a adjacentBall tambem, juntamo-los
-                        print("current tem grupo")#AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+                        print("current  tem grupo")#AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
                         if inGroup(groupBoard, adjacentBall):
                             #juntamos os grupos
                             print("adjacente tem grupo")#AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
@@ -202,14 +202,15 @@ def  board_find_groups(board):
                 setpartlyVisited(visited_board, adjacentBall)
             if currentBall_in_group==False:
                 addAnotherGroup(groups,currentBall)
+                nowInGroup(groupBoard, currentBall)
                 currentBall_in_group=True
+
         print(groups)
     setVisited(visited_board,currentBall)
 
-    return groups
 
 t=[[3,1,3,2],[1,1,1,3],[1,3,2,1],[1,1,3,3],[3,3,1,2], [2,2,2,2],[3,1,2,3],[2,3,2,3],[5,1,1,3],[4,5,1,2]]
-print(board_find_groups(t))
+board_find_groups(t)
 
 
 """
