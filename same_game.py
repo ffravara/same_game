@@ -252,9 +252,9 @@ def board_remove_groups(t, group):
     for j in range(columns):
         colorless_column=True
         for i in range(lines):
-            if has_no_color(board,make_pos(i,j)):
+            if has_color(board,make_pos(i,j)):
                 colorness_column=False
-        #se encontrou uma coluna sem cor...
+            #se encontrou uma coluna sem cor...
         if (colorness_column):
             #percorre desde o indice da coluna ate a penultima coluna
             for k in range(columns-j-1):
