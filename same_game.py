@@ -194,17 +194,17 @@ def  board_find_groups(board):
                         else:
                             print("nenhuma tem grupo")#AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
                             addTwoGroup(groups, currentBall, adjacentBall)
-                            currentBall_in_group=True
                             nowInGroup(groupBoard,adjacentBall)
                             nowInGroup(groupBoard,currentBall)
+                        currentBall_in_group=True
                 if not partlyVisited(visited_board, adjacentBall):
                     stack.append(adjacentBall)
-                setpartlyVisited(visited_board, adjacentBall)
-            if currentBall_in_group==False:
-                addAnotherGroup(groups,currentBall)
-                currentBall_in_group=True
-        print(groups)
-    setVisited(visited_board,currentBall)
+                    setpartlyVisited(visited_board, adjacentBall)
+        if currentBall_in_group==False:
+            addAnotherGroup(groups,currentBall)
+            currentBall_in_group=True
+            print(groups)
+        setVisited(visited_board,currentBall)
 
     return groups
 
