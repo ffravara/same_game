@@ -224,23 +224,34 @@ printwithgroups(10,4,board_find_groups(t),t)"""
 
 
 
+
 def board_remove_group(t, group):
     board = copy.deepcopy(t)
     lines=seeLines(board)
     columns=seeLines(board)
+    print('Orignal--------------')
     printBoard(t)
+    print('----------------------------')
+
     #encontrar o grupo que e eliminado, e por as posicoes a zero(sem cor)
-    for sublist in groups:
-        if group==sublist:
-            for ball in sublist:
+    for i in range(len(groups)):
+
+        if set(group) == set(groups[i]):
+            for ball in groups[i]:
                 set_no_color(board, ball)
-                printBoard(t)
-    #COMPACTACAO VERTICAL
+                print('====================================')
+                printBoard(board)
+                print('====================================')
+            del groups[i]
+            break
+    print(groups)
+
+    #COMPACTACAO VERTICAL  caem bolas
 
     #fazer a compactacao vertical a cada coluna....
     for j in range(columns):
         #percorrer (em cada coluna) a posicao de baixo para cima ate econtrar um espaco
-        for i in range(lines, -1, -1):
+        for i in range(lines -1 , -1, -1):
             if has_no_color(board,make_pos(i,j)):
                 #empurra os de cima desse para baixo(copia o valor da pos de cima para a de baixo
                 for k in range(i,0,-1):
@@ -248,24 +259,26 @@ def board_remove_group(t, group):
                     setColor(board, make_pos(i,j),color)
                 set_no_color(board, make_pos(0,j))
 
-    #COMPACTACAO HORIZONTAL
+    #COMPACTACAO HORIZONTAL  vao para a esquerda 
     #percorre as colunas da esquerda para a direita
-    for j in range(columns):
-        colorless_column=True
-        for i in range(lines):
-            if has_color(board,make_pos(i,j)):
-                colorness_column=False
-            #se encontrou uma coluna sem cor...
-        if (colorness_column):
-            #percorre desde o indice da coluna ate a penultima coluna
-            for k in range(columns-j-1):
-                column_index=k+j
-                #e para cada pos nas colunas posteriores, pos fica com a cor da pos da coluna a direita
-                for l in range(lines):
-                    color=getColor(t,make_pos(l,column_index+1))
-                    setColor(t,make_pos(l,column_index), color)
-            for l in range(lines):
-                set_no_color(board, make_pos(l,columns))
+    # for j in range(columns):
+    #     colorless_column=True
+    #     for i in range(lines):
+    #         if has_color(board,make_pos(i,j)):
+    #             colorless_column=False
+    #             break
+    #         #se encontrou uma coluna sem cor...
+    #     print(colorless_column)
+    #     if (colorless_column):
+    #         #percorre desde o indice da coluna ate a penultima coluna
+    #         for k in range(columns-j-1):
+    #             column_index=k+j
+    #             #e para cada pos nas colunas posteriores, pos fica com a cor da pos da coluna a direita
+    #             for l in range(lines):
+    #                 color=getColor(t,make_pos(l,column_index+1))
+    #                 setColor(t,make_pos(l,column_index), color)
+    #         for l in range(lines):
+    #             set_no_color(board, make_pos(l,columns-1))
 
     return board
 
@@ -274,6 +287,9 @@ def board_remove_group(t, group):
 
 
 t = [[1,2,2,3,3],[2,2,2,1,3],[1,2,2,2,2],[1,1,1,1,1]]
+
+groups = board_find_groups(t)
+
 
 groupOf2 = [(0, 1), (1, 1), (0, 2), (1, 2), (2, 4), (2, 3), (2, 2), (2, 1), (1, 0)]
 groupOf1 = [(2, 0), (3, 0), (3, 1), (3, 2), (3, 3), (3, 4)]
