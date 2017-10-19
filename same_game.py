@@ -66,6 +66,8 @@ def getColor( t ,pos):
     return t[pos_l(pos)][pos_c(pos)]
 def has_no_color(t,pos):
     t[pos_l(pos)][pos_c(pos)]=get_no_color()
+def has_color(t,pos):
+    return t[pos_l(pos)][pos_c(pos)]>0
 def setColor(t,pos,color):
         t[pos_l(pos)][pos_c(pos)]=color
 
@@ -208,37 +210,61 @@ def  board_find_groups(board):
 
     return groups
 
-t=[[3,1,3,2],[1,1,1,3],[1,3,2,1],[1,1,3,3],[3,3,1,2], [2,2,2,2],[3,1,2,3],[2,3,2,3],[5,1,1,3],[4,5,1,2]]
-print(board_find_groups(t))
+t=[[3,1,3,2],[1,1,1,3],[1,3,2,1],[1,1,3,3],[3,3,1,2],
+ [2,2,2,2],[3,1,2,3],[2,3,2,3],[2,1,1,3],[2,3,1,2]]
+#print(board_find_groups(t))"""
+
+"""def printwithgroups(l,c,groups,t):
+    board=[[0 for i in range(c)]for j in range(l)]
+    for sublist in groups:
+        for pos in sublist:
+            board[pos_l(pos)][pos_c(pos)]=getColor(t,pos)
+    printBoard(board)
+
+printwithgroups(10,4,board_find_groups(t),t)"""
 
 
-"""
+
 def board_remove_groups(t, group):
-    board=copy.deepcopy(t)
+    board = copy.deepcopy(t)
     lines=seeLines(board)
     columns=seeLines(board)
+    #encontrar o grupo que e eliminado, e por as posicoes a zero(sem cor)
     for sublist in groups:
         if group==sublist:
             for ball in sublist:
                 set_no_color(board, ball)
-    index=0
+    #COMPACTACAO VERTICAL
+
+    #fazer a compactacao vertical a cada coluna....
     for j in range(columns):
+        #percorrer (em cada coluna) a posicao de baixo para cima ate econtrar um espaco
         for i in range(lines, -1, -1):
             if has_no_color(board,make_pos(i,j)):
-                index=i-1
-                #empurra os de cima desse para baixo
-                for k in range(index,-1,-1):
-                    color=getColor(board, make_pos(index,j))
-                    setColor(board, make_pos(index+1,j),color)
+                #empurra os de cima desse para baixo(copia o valor da pos de cima para a de baixo
+                for k in range(i,0,-1):
+                    color=getColor(board, make_pos(i+1,j))
+                    setColor(board, make_pos(i,j),color)
+                set_no_color(board, make_pos(0,j),)
 
-
-
-
-    for j in range(columns,-1-1):
-        for i in range(lines, -1, -1):
+    #COMPACTACAO HORIZONTAL
+    #percorre as colunas da esquerda para a direita
+    for j in range(columns):
+        colorless_column=True
+        for i in range(lines):
             if has_no_color(board,make_pos(i,j)):
-                for k in range(i)
-                    color=getColor(board, make_pos(i,j), color)
+                colorness_column=False
+        #se encontrou uma coluna sem cor...
+        if (colorness_column):
+            #percorre desde o indice da coluna ate a penultima coluna
+            for k in range(columns-j-1):
+                column_index=k+j
+                #e para cada pos nas colunas posteriores, pos fica com a cor da pos da coluna a direita
+                for l in range(lines):
+                    color=getColor(t,make_pos(l,column_index+1))
+                    setColor(t,make_pos(l,column_index))=color
+                for l in range(lines):
+                    set_no_color(board, make_pos(l,columns),color)
 
 
 
@@ -248,7 +274,10 @@ def board_remove_groups(t, group):
 
 
 
-"""
+
+
+
+
 """GREEN TRASH (hopefully not needed recyclabe shit)"""
 
 
