@@ -65,7 +65,7 @@ def color (c):
 def getColor( t ,pos):
     return t[pos_l(pos)][pos_c(pos)]
 def has_no_color(t,pos):
-    t[pos_l(pos)][pos_c(pos)]=get_no_color()
+    return t[pos_l(pos)][pos_c(pos)]==get_no_color()
 def has_color(t,pos):
     return t[pos_l(pos)][pos_c(pos)]>0
 def setColor(t,pos,color):
@@ -250,12 +250,23 @@ def board_remove_group(t, group):
 
     #fazer a compactacao vertical a cada coluna....
     for j in range(columns):
+        # print('inside column')
         #percorrer (em cada coluna) a posicao de baixo para cima ate econtrar um espaco
         for i in range(lines -1 , -1, -1):
+            print('inside line')
+            print ('({} , {})'.format(i,j))
+            print (getColor(board, make_pos(i,j)))
+            print (has_no_color(board, make_pos(i,j)))
             if has_no_color(board,make_pos(i,j)):
+                print(i)
                 #empurra os de cima desse para baixo(copia o valor da pos de cima para a de baixo
                 for k in range(i,0,-1):
+                    print(k)
+                    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+                    printBoard(board)
+                    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
                     color = getColor(board, make_pos(i+1,j))
+                    print('Posiçao: {}'.format(color))
                     setColor(board, make_pos(i,j),color)
                 set_no_color(board, make_pos(0,j))
 
