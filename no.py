@@ -4,7 +4,7 @@ class sg_state(object):
 		super().__init__()
 		self.board = board
 
-	# choose best deciding factor for this	
+	# choose best deciding factor for this
 	def __lt__(self, otherState):
 		#if self.nrGroups < otherState.nrGroups:
 		# 	return self
@@ -46,16 +46,12 @@ class same_game(Problem):
 
 		return newState
 
-	# def goal_test(self, state):      E preciso fazer override disto?????
+
+	def h(self, node):
+		state = node.state
+		removableGroups = board_find_groups(state.board)
+
+
+
 
 	# mesma coisa para o path cost
-
-	
-
-
-
-
-
-		
-
-		
